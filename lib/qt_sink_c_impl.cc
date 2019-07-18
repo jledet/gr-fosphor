@@ -18,10 +18,6 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifdef ENABLE_PYTHON
-# include <Python.h>
-#endif
-
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
@@ -31,12 +27,15 @@
 #include <QApplication>
 #include <QWidget>
 #include <QGLWidget>
+#include <QThread>
 
 #include "QGLSurface.h"
 
 
 namespace gr {
   namespace fosphor {
+
+
 
 qt_sink_c::sptr
 qt_sink_c::make(QWidget *parent)
@@ -45,7 +44,7 @@ qt_sink_c::make(QWidget *parent)
 }
 
 qt_sink_c_impl::qt_sink_c_impl(QWidget *parent)
-  : base_sink_c("glfw_sink_c")
+  : base_sink_c("qt_sink_c"), d_parent(parent)
 {
 	/* QT stuff */
 	if(qApp != NULL) {
@@ -57,9 +56,9 @@ qt_sink_c_impl::qt_sink_c_impl(QWidget *parent)
 		d_qApplication = new QApplication(argc, argv);
 	}
 
-	this->d_gui = new QGLSurface(parent, this);
+	this->d_gui = new QGLSurface(d_parent, this);
+	this->d_gui->handOver();
 }
-
 
 void
 qt_sink_c_impl::glctx_init()
@@ -104,7 +103,6 @@ qt_sink_c_impl::qwidget()
 {
 	return dynamic_cast<QWidget*>(this->d_gui);
 }
-
 
 #ifdef ENABLE_PYTHON
 PyObject*

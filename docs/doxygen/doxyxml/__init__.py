@@ -1,7 +1,7 @@
 #
 # Copyright 2010 Free Software Foundation, Inc.
 #
-# This file is part of GNU Radio
+# This file is part of gr-fosphor
 #
 # GNU Radio is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -63,8 +63,9 @@ This line is uninformative and is only to test line breaks in the comments.
 u'Outputs the vital aadvark statistics.'
 
 """
+from __future__ import unicode_literals
 
-from doxyindex import DoxyIndex, DoxyFunction, DoxyParam, DoxyClass, DoxyFile, DoxyNamespace, DoxyGroup, DoxyFriend, DoxyOther
+from .doxyindex import DoxyIndex, DoxyFunction, DoxyParam, DoxyClass, DoxyFile, DoxyNamespace, DoxyGroup, DoxyFriend, DoxyOther
 
 def _test():
     import os

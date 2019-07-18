@@ -22,13 +22,17 @@
 #ifndef INCLUDED_GR_FOSPHOR_QT_SINK_C_H
 #define INCLUDED_GR_FOSPHOR_QT_SINK_C_H
 
+#ifdef ENABLE_PYTHON
+#include <Python.h>
+#endif
+
 #include <gnuradio/fosphor/api.h>
 #include <gnuradio/fosphor/base_sink_c.h>
 
 #include <gnuradio/sync_block.h>
 
-class QApplication;
-class QWidget;
+#include <QWidget>
+#include <QApplication>
 
 namespace gr {
   namespace fosphor {
@@ -55,7 +59,7 @@ namespace gr {
       virtual void exec_() = 0;
       virtual QWidget* qwidget() = 0;
 
-#if defined(PY_VERSION) || defined(SWIGPYTHON)
+#ifdef ENABLE_PYTHON
       virtual PyObject* pyqwidget() = 0;
 #else
       virtual void* pyqwidget() = 0;

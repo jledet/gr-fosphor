@@ -25,11 +25,12 @@
 #include <gnuradio/fosphor/qt_sink_c.h>
 
 #include "base_sink_c_impl.h"
-
-class QGLWidget;
+#include "QGLSurface.h"
 
 namespace gr {
   namespace fosphor {
+
+  class QGLSurface;
 
     /*!
      * \brief Qt version of fosphor sink (implementation)
@@ -40,7 +41,8 @@ namespace gr {
      friend class QGLSurface;
 
      private:
-      QGLWidget *d_gui;
+      QGLSurface *d_gui;
+      QWidget* d_parent;
 
      protected:
       /* Delegated implementation of GL context management */
@@ -56,7 +58,7 @@ namespace gr {
       void exec_();
       QWidget* qwidget();
 
-#if defined(PY_VERSION) || defined(SWIGPYTHON)
+#if ENABLE_PYTHON
       PyObject* pyqwidget();
 #else
       void* pyqwidget();

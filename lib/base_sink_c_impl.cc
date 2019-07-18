@@ -87,6 +87,7 @@ base_sink_c_impl::~base_sink_c_impl()
 void base_sink_c_impl::worker()
 {
 	/* Zero-init */
+	this->d_active = true;
 	this->d_fosphor = NULL;
 
 	/* Init GL context */
@@ -130,12 +131,6 @@ error:
 	/* And GL context */
 	this->glctx_fini();
 }
-
-void base_sink_c_impl::_worker(base_sink_c_impl *obj)
-{
-        obj->worker();
-}
-
 
 void
 base_sink_c_impl::render(void)
@@ -432,26 +427,6 @@ base_sink_c_impl::work(
 
 	/* Report what we took */
 	return l;
-}
-
-bool base_sink_c_impl::start()
-{
-	bool rv = base_sink_c::start();
-	if (!this->d_active) {
-		this->d_active = true;
-		this->d_worker = gr::thread::thread(_worker, this);
-	}
-	return rv;
-}
-
-bool base_sink_c_impl::stop()
-{
-	bool rv = base_sink_c::stop();
-	if (this->d_active) {
-		this->d_active = false;
-		this->d_worker.join();
-	}
-	return rv;
 }
 
   } /* namespace fosphor */

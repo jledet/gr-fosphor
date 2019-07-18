@@ -40,11 +40,14 @@ namespace gr {
      private:
       /* GLFW stuff */
       GLFWwindow *d_window;
+      /* Worker thread */
+      gr::thread::thread d_worker;
 
       void glfw_render(void);
       void glfw_cb_reshape(int w, int h);
       void glfw_cb_key(int key, int scancode, int action, int mods);
 
+      static void _worker(base_sink_c_impl *obj);
       static void _glfw_cb_reshape(GLFWwindow *wnd, int w, int h);
       static void _glfw_cb_key(GLFWwindow *wnd, int key, int scancode, int action, int mods);
 
@@ -58,6 +61,8 @@ namespace gr {
 
      public:
       glfw_sink_c_impl();
+      virtual bool start();
+      virtual bool stop();
     };
 
   } // namespace fosphor

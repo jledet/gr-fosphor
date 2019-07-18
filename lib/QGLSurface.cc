@@ -20,19 +20,54 @@
 
 #include <QtEvents>
 #include "QGLSurface.h"
+
 #include "qt_sink_c_impl.h"
 
 #include <stdio.h>
+#include <chrono>
 
 namespace gr {
   namespace fosphor {
 
+Worker::Worker(qt_sink_c_impl *sink) {
+	d_sink = sink;
+}
+
+Worker::~Worker() {
+}
+
+void Worker::process() {
+	d_sink->worker();
+}
+
+
 QGLSurface::QGLSurface(QWidget *parent, qt_sink_c_impl *block)
   : QGLWidget(parent), d_block(block)
 {
-	this->doneCurrent();
 	this->setFocusPolicy(Qt::StrongFocus);
 	this->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+}
+
+void
+QGLSurface::handOver() {
+
+	d_thread = new QThread();
+	Worker *worker = new Worker(d_block);
+	worker->moveToThread(d_thread);
+
+	connect(d_thread, SIGNAL(started()), worker, SLOT(process()));
+
+	context()->doneCurrent();
+	context()->moveToThread(d_thread);
+
+	d_thread->start();
+}
+
+void
+QGLSurface::closeEvent(QCloseEvent *event) {
+	d_block->d_active = false;
+	std::this_thread::sleep_for(std::chrono::milliseconds(100));
+	event->accept();
 }
 
 void

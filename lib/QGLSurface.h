@@ -22,25 +22,50 @@
 #define INCLUDED_GR_FOSPHOR_QGLSURFACE_H
 
 #include <QGLWidget>
+#include <QThread>
 
 namespace gr {
   namespace fosphor {
 
     class qt_sink_c_impl;
 
-    class QGLSurface : public ::QGLWidget
+    class Worker : public QObject
     {
       Q_OBJECT
 
+     public:
+      Worker(qt_sink_c_impl *sink);
+      ~Worker();
+
+     public Q_SLOTS:
+      void process();
+
+     Q_SIGNALS:
+      void finished();
+      void error(QString err);
+
+     private:
+      qt_sink_c_impl *d_sink;
+    };
+
+
+    class QGLSurface : public QGLWidget
+    {
+      Q_OBJECT
+
+     private:
       qt_sink_c_impl *d_block;
 
      protected:
       void paintEvent(QPaintEvent *pe);
       void resizeEvent(QResizeEvent *re);
       void keyPressEvent(QKeyEvent *ke);
+      void closeEvent(QCloseEvent * event);
 
      public:
       QGLSurface(QWidget *parent, qt_sink_c_impl *d_block);
+      void handOver();
+      QThread *d_thread;
     };
 
   } // namespace fosphor

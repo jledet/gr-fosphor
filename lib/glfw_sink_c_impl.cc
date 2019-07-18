@@ -43,6 +43,34 @@ glfw_sink_c_impl::glfw_sink_c_impl()
 	/* Nothing to do but super call */
 }
 
+void
+glfw_sink_c_impl::_worker(base_sink_c_impl *obj)
+{
+        obj->worker();
+}
+
+bool
+glfw_sink_c_impl::start()
+{
+	bool rv = base_sink_c::start();
+	if (!this->d_active) {
+		this->d_active = true;
+		this->d_worker = gr::thread::thread(_worker, this);
+	}
+	return rv;
+}
+
+bool
+glfw_sink_c_impl::stop()
+{
+	bool rv = base_sink_c::stop();
+	if (this->d_active) {
+		this->d_active = false;
+		this->d_worker.join();
+	}
+	return rv;
+}
+
 
 void
 glfw_sink_c_impl::glfw_cb_reshape(int w, int h)

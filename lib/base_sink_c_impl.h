@@ -43,13 +43,7 @@ namespace gr {
     class base_sink_c_impl : virtual public base_sink_c
     {
      private:
-      /* Worker thread */
-      gr::thread::thread d_worker;
-      bool d_active;
       bool d_frozen;
-
-      void worker();
-      static void _worker(base_sink_c_impl *obj);
 
       /* fosphor core */
       fifo *d_fifo;
@@ -68,7 +62,7 @@ namespace gr {
         SETTING_POWER_RANGE	= (1 << 1),
         SETTING_FREQUENCY_RANGE	= (1 << 2),
         SETTING_FFT_WINDOW	= (1 << 3),
-	SETTING_RENDER_OPTIONS	= (1 << 4),
+        SETTING_RENDER_OPTIONS	= (1 << 4),
       };
 
       uint32_t d_settings_changed;
@@ -112,7 +106,10 @@ namespace gr {
       /* Callbacks from GL window */
       void cb_reshape(int width, int height);
 
+      bool d_active;
+
      public:
+      void worker();
       virtual ~base_sink_c_impl();
 
       /* gr::fosphor::base_sink_c implementation */
@@ -130,8 +127,6 @@ namespace gr {
                 gr_vector_const_void_star &input_items,
                 gr_vector_void_star &output_items);
 
-      bool start();
-      bool stop();
     };
 
   } // namespace fosphor

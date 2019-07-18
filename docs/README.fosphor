@@ -1,4 +1,4 @@
-To use the fosphor blocks in Python, import it as :
+To use the fosphor blocks in Python, import it as:
 
     from gnuradio import fosphor
 
