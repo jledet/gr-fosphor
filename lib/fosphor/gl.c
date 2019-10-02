@@ -123,22 +123,6 @@ gl_tex2d_write(GLuint tex_id, float *src, int width, int height)
 	);
 }
 
-static void
-gl_vbo_clear(GLuint vbo_id, int size)
-{
-	void *ptr;
-
-	glBindBuffer(GL_ARRAY_BUFFER, vbo_id);
-
-	ptr = glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
-	if (!ptr)
-		abort();
-
-	memset(ptr, 0x00, size);
-
-	glUnmapBuffer(GL_ARRAY_BUFFER);
-}
-
 #if 0
 static void
 gl_vbo_read(GLuint vbo_id, void *dst, int size)
@@ -231,8 +215,6 @@ gl_deferred_init(struct fosphor *self)
 
 	len = 2 * sizeof(float) * 2 * FOSPHOR_FFT_LEN;
 	glBufferData(GL_ARRAY_BUFFER, len, NULL, GL_DYNAMIC_DRAW);
-
-	gl_vbo_clear(gl->vbo_spectrum, len);
 }
 
 
